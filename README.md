@@ -17,7 +17,7 @@ This project is meant to be a practical, hackable starting point for your own ne
   - video **encoder** (default: `libx264`, plus other “MP4-friendly” options if available)
   - **audio**: copy or AAC (default: copy)
   - optional **trim**: start time in seconds (default `0`) and optional end time in seconds
-- output is web-friendly and optimized for compatibility:
+- output is web-friendly and optimized for compatibility.
 
 ---
 
