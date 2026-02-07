@@ -8,8 +8,8 @@ This project is meant to be a practical, hackable starting point for your own ne
 
 ## Features
 
-- **Input/Output:** takes exactly two arguments: `input.mp4` and `output.mp4`
-- **Interactive prompts** before encoding:
+- **input/output:** takes exactly two arguments: `input.mp4` and `output.mp4`
+- **interactive prompts** before encoding:
   - ffmpeg **preset** (default: `slow`)
   - target **resolution**: `1080p`, `720p` (default), `480p`
   - **rotation**: `0` (default), `90`, `180`, `270`
@@ -17,9 +17,7 @@ This project is meant to be a practical, hackable starting point for your own ne
   - video **encoder** (default: `libx264`, plus other “MP4-friendly” options if available)
   - **audio**: copy or AAC (default: copy)
   - optional **trim**: start time in seconds (default `0`) and optional end time in seconds
-- output is optimized for compatibility:
-  - `-pix_fmt yuv420p` for broad device/player support
-  - `-movflags +faststart` for “streamable” MP4 (moov atom at the beginning)
+- output is web-friendly and optimized for compatibility:
 
 ---
 

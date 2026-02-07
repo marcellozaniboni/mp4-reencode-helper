@@ -5,7 +5,7 @@ set -euo pipefail
 function showbanner() {
 	local license="$1"
 	echo "≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈"
-	echo "| Small video encoding script                          |"
+	echo "| mp4-reencode-helper script                           |"
 	echo "| version 0.2 - © 2026 Marcello Zaniboni - MIT License |"
 	[[ "$license" != "" ]] || echo "| (run without arguments to read the license terms)    |"
 	echo "≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈"
