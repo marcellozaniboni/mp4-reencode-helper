@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
-set -euo pipefail
 
 ## Script banner
 function showbanner() {
 	local license="$1"
 	echo "≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈"
 	echo "| mp4-reencode-helper script                           |"
-	echo "| version 0.2 - © 2026 Marcello Zaniboni - MIT License |"
+	echo "| version 0.3 - © 2026 Marcello Zaniboni - MIT License |"
 	[[ "$license" != "" ]] || echo "| (run without arguments to read the license terms)    |"
 	echo "≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈"
 	echo
@@ -121,7 +120,12 @@ fi
 showbanner ""
 
 need "ffmpeg"
+need "ffprobe"
 need "awk"
+need "bc"
+need "tr"
+need "wc"
+need "cut"
 
 IN="$1"
 OUT="$2"
@@ -137,7 +141,21 @@ if [[ -e "$OUT" ]]; then
 	die "The output file already exists"
 fi
 
-## Read user input
+## Show input file properties
+
+input_res=$(ffprobe -v quiet -print_format json -show_format -show_streams "$IN" | grep 'width\|height' | grep -v coded | tr -d '"' | tr -d ",")
+input_codec=$(ffprobe -v quiet -print_format json -show_format -show_streams "$IN" | grep 'codec_long_name' | head -n 1 | tr -d '"' | tr -d "," | cut -d':' -f2)
+input_byte_size=$(cat "$IN" | wc -c)
+input_mb_size=$(echo "scale=2; $input_byte_size / 1024 / 1024" | bc)
+echo "Input file:"
+echo -n "  "
+echo $input_res
+echo "  size: $input_mb_size MB"
+echo -n "  codec: "
+echo $input_codec
+echo
+
+## Get user input
 
 PRESET_OPTS=(ultrafast superfast veryfast faster fast medium slow slower veryslow)
 PRESET="$(prompt_choice \
@@ -248,9 +266,20 @@ CMD+=(-movflags +faststart "$OUT")
 ## ffmpeg execution
 echo
 echo "Executing command:"
-echo ${CMD[@]}
+echo "  " ${CMD[@]}
 echo
-sleep 1
+i=25
+while [ "$i" -gt "0" ]; do
+	if [ "$(($i % 5))" -ne 0 ]; then
+		echo -n .
+	else
+		echo -n $(($i / 5))
+	fi
+	let i-=1
+	sleep 0.2
+done
+echo "0"
+
 "${CMD[@]}"
 
 # final report
