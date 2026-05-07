@@ -5,7 +5,7 @@ function showbanner() {
 	local license="$1"
 	echo "≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈"
 	echo "| mp4-reencode-helper script                           |"
-	echo "| version 0.3 - © 2026 Marcello Zaniboni - MIT License |"
+	echo "| version 0.4 - © 2026 Marcello Zaniboni - MIT License |"
 	[[ "$license" != "" ]] || echo "| (run without arguments to read the license terms)    |"
 	echo "≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈"
 	echo
@@ -145,7 +145,7 @@ fi
 
 input_res=$(ffprobe -v quiet -print_format json -show_format -show_streams "$IN" | grep 'width\|height' | grep -v coded | tr -d '"' | tr -d ",")
 input_codec=$(ffprobe -v quiet -print_format json -show_format -show_streams "$IN" | grep 'codec_long_name' | head -n 1 | tr -d '"' | tr -d "," | cut -d':' -f2)
-input_byte_size=$(cat "$IN" | wc -c)
+input_byte_size=$(stat -c %s "$IN")
 input_mb_size=$(echo "scale=2; $input_byte_size / 1024 / 1024" | bc)
 echo "Input file:"
 echo -n "  "
@@ -278,9 +278,9 @@ while [ "$i" -gt "0" ]; do
 	let i-=1
 	sleep 0.2
 done
-echo "0"
+echo "0"; echo
 
-"${CMD[@]}"
+nice -n 19 "${CMD[@]}"
 
 # final report
 echo
